@@ -5,26 +5,34 @@ import { clearConsole } from './modules/clearConsole.js';
 import { renderTable } from './modules/renderTable.js';
 import { playRound } from './modules/playRound.js';
 import Dealer from './classes/dealer.js';
+import { introduce } from './modules/intro.js';
 
 import chalk from 'chalk';
 
-// Globally mutable
+
+// Globally mutable round data
 export let roundData = {
 
     roundNumber: 0, // Zero-based, increments by 1 AFTER game setup
+    isDealerFacedownCardShowing: false, // Default
 
-    // Get and Set methods
-    get() { return this.roundNumber; }, // get() is redundant but is here for practicality
-    set(newRoundNumber) { this.roundNumber = newRoundNumber; }
+    // Setter method to allow global changes (can set both above variables)
+    set({ newRoundNumber, isDealerFacedownCardShowing }) {
+
+        // Check for either or variable being passed in parameter and set
+        if (newRoundNumber !== undefined) this.roundNumber = newRoundNumber;
+        if (isDealerFacedownCardShowing !== undefined) this.isDealerFacedownCardShowing = isDealerFacedownCardShowing;
+    }
 };
 
-configureGame(); // (Entry point) Hoisted function can execute [here] at top-level
+introduce(); // (Main entry point) Calls configureGame() when finished
 
 
 // Run the configuration for the game
 export async function configureGame() {
 
     clearConsole(); // Remove all console content before starting game
+    console.log(chalk.bold.underline.gray('Game Setup\n'));
 
     // Create dealer, deck and players array
     let dealer = new Dealer('Dealer', 0, 'active');
@@ -44,9 +52,10 @@ export async function configureGame() {
 
     // Print players' cards *before* validating scores/statuses
     clearConsole();
-    renderTable(players, dealer, 'Players have been set, Cards have been dealt');
+    console.log(chalk.italic.gray('🛈 Note: These are the initial cards dealt to everyone before the first round\n'));
+    renderTable(players, dealer, ['> Players have been set\n> Initial cards have been dealt']); // Last parameter has to be Array
 
     // Finally, wait for user input to start game
-    await promptUser(chalk.gray('\nPress enter to start the game..'))
-    .then(() => { playRound(players, dealer, deck); });
+    await promptUser(chalk.gray('\nPress ENTER to start the game..'))
+    .then(() => playRound(players, dealer, deck));
 };

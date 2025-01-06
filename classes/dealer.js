@@ -8,6 +8,7 @@ export default class Dealer {
         this.isDealer = true;
         this.statusVisible = false;
         this.hand = [];
+        this.handWithFacedownRule = [];
     }
 
     // Exclusively return the second cards' handValue
@@ -16,13 +17,13 @@ export default class Dealer {
     };
 
     // Returns the players' current hand + handValue
-    getHand(facedownRule = false) { // Default to false
+    getHand(isFacedownCardShowing) {
 
         // Convert player hand into a flat array of strings
         let handMap = this.hand.flatMap(item => { return item.cardName });
 
         // Check if we are returning hand with facedown rule
-        if (facedownRule) {
+        if (isFacedownCardShowing === false) {
             handMap[0] = '**';
         };
 

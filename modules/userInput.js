@@ -13,6 +13,27 @@ const readlineInterface = readline.createInterface({
 });
 
 
+// ask the player to HIT or STAND
+export async function askToPlayHand(question) {
+
+    // Run until player enters valid string
+    while (true) {
+
+        // Promise
+        let answer = await new Promise((resolve) => {
+            readlineInterface.question(chalk.green(question), (response) => resolve(response));
+        });
+
+        // Trim for whitespace and .toUpperCase()
+        answer = answer.trim().toUpperCase();
+        if ((answer === 'HIT' || answer === 'STAND') && answer) {
+            return answer;
+        };
+        console.log(chalk.red('Please enter either "HIT" or "STAND", with no spaces: '));
+    };
+};
+
+
 // Ask user a question and always receive valid response
 export async function askQuestion(question) {
 
@@ -54,14 +75,14 @@ export async function askQuestionNumberInput(question) {
 };
 
 // Ask user to restart the game
-export async function askToRestartGame(players, dealer, endGameReason) {
+export async function askToRestartGame(players, dealer, announcementString) {
 
     // Render the user data table before starting a new game
     clearConsole();
-    await renderTable(players, dealer, endGameReason);
+    await renderTable(players, dealer, announcementString);
 
     // Ask user to start a new game
-    return await promptUser(chalk.yellow(`${endGameReason}, Press ENTER to start a new game..`))
+    return await promptUser(chalk.yellow(`Press ENTER to start a new game..`))
     .then(async () => configureGame());
 };
 

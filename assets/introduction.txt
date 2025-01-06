@@ -1,0 +1,7 @@
+Get ready to test your skills in the classic card game of Blackjack,
+where your goal is to beat the dealer by getting as close to 21 as possible without going over.
+
+In this game, you’ll make strategic decisions by answering on-screen prompts
+like "Hit" to draw another card or "Stand" to keep your current total.
+
+Simply type your choices, or press the ENTER key, when prompted and watch the action unfold. 🃏

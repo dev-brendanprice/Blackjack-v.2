@@ -19,7 +19,7 @@ function stylePlayerData(name, hand, handValue, status, isDealer) {
 
         case 'lost':
             
-            // Check for dealer
+            // Dealer has different text style if they lose
             if (isDealer) {
                 return [chalk.bgRed(name), chalk.bgRed(hand), chalk.bgRed(handValue)];
             };
@@ -35,30 +35,37 @@ function stylePlayerData(name, hand, handValue, status, isDealer) {
 // Mutate and return players to only contain what is required in the table
 function mapPlayerData(players) {
     
-    let playersArray = [];
-
+    let playerRows = [];
     for (let player of players) {
 
-        // Check if player is dealer and only show when roundNumber === 0
+        // Check if player is dealer and only show facedown after first round
         let handValue = player.handValue.toString();
-        let rowData = stylePlayerData(player.name, player.getHand(), handValue, player.status, player.isDealer);;
 
-        // Determine if player is dealer and apply text styling based on status & round zero
-        if (player.isDealer && roundData.get() === 0) {
+        // Determine if player is dealer and apply text styling based on status & if isDealerFacedownCardShowing is set to True
+        if (player.isDealer && roundData.isDealerFacedownCardShowing === false) {
             handValue = player.getFacedownValue().toString();
-            rowData = stylePlayerData(player.name, player.getHand(true), handValue, player.status, player.isDealer)
         };
 
-        playersArray.push(rowData);
+        // Declare new Array to return
+        let rowData = stylePlayerData(
+            player.name,
+            player.getHand(roundData.isDealerFacedownCardShowing),
+            handValue,
+            player.status,
+            player.isDealer
+        );
+
+        playerRows.push(rowData);
     };
 
-    return playersArray;
+    return playerRows;
 };
 
 
 // Render and configure the table for a [more] readable console output
 export async function renderTable(players, dealer, dialogue = '') {
 
+    // Wrap in a Promise to ensure the table is always rendered when called
     return new Promise((resolve, reject) => {
 
         players.push(dealer); // Push dealer to players (removed at the end of this function)
@@ -66,7 +73,7 @@ export async function renderTable(players, dealer, dialogue = '') {
         // Configure new table class
         let table = new Table({
             head: ['Name', 'Hand', 'Hand Value'],
-            colWidths: [20, 15, 12]
+            colWidths: [20, 20, 12]
         });
 
         // Get rows for player data
@@ -78,7 +85,7 @@ export async function renderTable(players, dealer, dialogue = '') {
             // Push and configure table rows
             table.push(
                 ...playerDataRows,
-                [{colSpan: 3, content: chalk.cyan(`> ${dialogue}`)}]
+                [{colSpan: 3, content: chalk.cyan(dialogue)}] // dialogue is always type-casted to String
             );
         }
         else {

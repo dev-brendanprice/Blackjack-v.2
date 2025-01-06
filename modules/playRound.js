@@ -1,44 +1,95 @@
 import { configureGame, roundData } from '../main.js';
 import { promptUser } from './userInput.js';
-import { checkHands } from './checkHands.js';
+import { checkHand } from './checkHands.js';
 import { clearConsole } from './clearConsole.js';
 import { checkForActive } from './checkForActive.js';
 import { renderTable } from './renderTable.js';
+import { playHand } from './playHand.js';
 
 import chalk from 'chalk';
 
 
 // Play a round of blackjack (recursively calls it self again based on user input)
-export async function playRound(players, dealer, deck) {
+export async function playRound(players, dealer, houseDeck) {
 
-    // Check for no players during round 0, e.g. the only player busts or wins - game ends
-    // if (roundData.roundNumber === 0) {
-    //     checkForActive(players);
-    // };
+    // Increment round counter
+    roundData.set({ newRoundNumber: roundData.roundNumber + 1 });
 
-    // Log round, game info
-    clearConsole();
-    console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+    // Iterate over players and ask them to HIT or STAND
+    let announcement;
+    for (let i=0; i < players.length; i++) {
 
-    // Increment the round counter
-    roundData.set(roundData.roundNumber + 1); // Increase by 1
+        // Clear console and log round
+        clearConsole();
+        console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
 
-    // Validate all hands
-    let endGameReason = await checkHands(players, dealer);
+        // Render table and get player from index
+        let player = players[i];
+        await renderTable(players, dealer, announcement);
 
-    // Render new table
-    await renderTable(players, dealer, endGameReason);
+        // Ask player to hit until they stand
+        let isPlaying = true;
+        while (isPlaying && player.status === 'active') {
+
+            // Returns true when player stands
+            isPlaying = await playHand(player, houseDeck);
+
+            // Clear console and log round
+            clearConsole();
+            console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+
+            // Check player hand, re-render table
+            announcement = await checkHand(player, dealer, players);
+            await renderTable(players, dealer, announcement);
+        };
+    };
     
-    // Check if no active players, or game was concluded
+    // Check for no active players
     let activePlayersExist = await checkForActive(players); // Default return from this function is False
     if (!activePlayersExist) {
 
         // Ask user to start a new game
-        return await promptUser(chalk.yellow(`${endGameReason}, Press ENTER to start a new game..`))
+        return await promptUser(chalk.yellow(`\nAll players have finished their hands. Press ENTER to start a new game..`))
         .then(() => configureGame());
     };
 
-    // Ask user to start next round
-    return await promptUser(chalk.gray('\nPress enter to start next round'))
-    .then(() => playRound(players, dealer, deck));
+
+    // Dealer mechanics past this point
+    // Toggle boolean to show dealer facedown card past this point
+    roundData.set({ isDealerFacedownCardShowing: true });
+    console.log(roundData.isDealerFacedownCardShowing);
+
+    // Clear console, re-render table
+    clearConsole();
+    console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+    await renderTable(players, dealer, announcement);
+
+    console.log(chalk.bgGreen('-> Dealer is playing their hand..'));
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before playing dealer hand
+
+    // Delay each iteration by 1 second, Play dealers hand until it's worth 17 or more (16 or less)
+    while (dealer.handValue <= 16) {
+
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Delay by 1 second
+
+        // Pull new card for Dealer
+        let newCard = houseDeck.deal();
+        dealer.hand.push(newCard);
+        dealer.handValue += newCard.cardValue;
+
+        // Clear console, Re-render table
+        clearConsole();
+        console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+        await renderTable(players, dealer);
+    };
+
+    // Check dealers' hand
+    let dealerAnnouncement = await checkHand(dealer, dealer, players);
+    console.log(dealer.getHand());
+    console.log(dealerAnnouncement);
+
+    // Clear console, Re-render table
+    clearConsole();
+    console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+    await renderTable(players, dealer, dealerAnnouncement);
 };
