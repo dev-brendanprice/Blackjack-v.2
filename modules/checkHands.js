@@ -2,118 +2,119 @@ import { askToRestartGame } from "./userInput.js";
 import { roundData } from "../main.js";
 
 
-// Append player status to player name
-function appendStatusToName(player) {
+// Compare the hand of each player against the dealer and update statuses accordingly
+export async function compareHands(dealer, players) {
 
-    // Check if player status is *not* already visible
-    if (!player.statusVisible) {
-        player.name = `${player.name} (${player.status})`;
-        player.statusVisible = true;
+    // Helper method to update status of a passed entity
+    let anc = [];
+    const updateStatus = (entity, status, message) => {
+        entity.status = status;
+        entity.statusChanged = true;
+        anc.push(message);
     };
 
-    return player;
+    for (let ply of players) {
+
+        // if player is bust
+        if (ply.handValue > 21) {
+            updateStatus(ply, 'bust', `${ply.name} bust`);
+        }
+        
+        // if player has pushed with dealer
+        else if (ply.handValue === dealer.handValue) {
+            updateStatus(ply, 'push', `${ply.name} push`);
+        }
+
+        // if player handValue is greater than dealer handValue or is 21
+        else if (ply.handValue > dealer.handValue || ply.handValue === 21) {
+            updateStatus(ply, 'won', `${ply.name} won`);
+        }
+
+        // if player handValue is lower than dealer handValue
+        else if (ply.handValue < dealer.handValue && dealer.handValue <= 21) {
+            updateStatus(ply, 'lost', `${ply.name} lost`);
+        }
+        
+        // if dealer goes bust but player still has valid hand
+        else if (ply.handValue <= 21 && dealer.handValue > 21) {
+            updateStatus(ply, 'won', `${ply.name} won`);
+        };
+    };
+
+    return anc.map(msg => `> ${msg}`).join('\n'); // return announcements prettified to String
 };
 
 
-// Check the hand of a single player (OLD)
+// Check the hand of a single player
 export async function checkHand(player, dealer, players) {
 
-    let announcementArray = [];
+    let announcements = []; // Announces changes for player/dealer.status
+    let facedownCardShowing = roundData.isDealerFacedownCardShowing;
 
-    // If player busts
-    if (player.handValue > 21) {
+    // Helper method to update status of a passed entity
+    const updateStatus = (entity, status, message) => {
 
-        // Check if player status has been announced before
-        if (!player.statusAnnounced) {
-
-            // Update player statuses, update endGameReason text
-            player.status = 'bust';
-            announcementArray.push(`${player.name} has gone bust`);
-            player.statusAnnounced = true;
+        // Only update status once
+        if (!entity.statusChanged) {
+            entity.status = status;
+            // entity.name = `${entity.name} (${entity.status})`;
+            entity.statusChanged = true;
+            entity.statusAnnounced = true;
+            announcements.push(message);
         };
-
-        // Append player status to player name
-        player = appendPlayerStatus(player);
-    }
-
-    // If dealer busts
-    else if (dealer.handValue > 21 && roundData.isDealerFacedownCardShowing) { // isDealerFacedownCardShowing == True (facedown rule)
-        
-        // Update dealer status
-        dealer.status = 'bust';
-        announcementArray.push('Dealer has gone bust');
-
-        // Append player status to player name
-        dealer = appendPlayerStatus(dealer);
-
-        // Update other player statuses
-        player.status = 'won';
-        
-        // Ask user to restart game
-        await askToRestartGame(players, dealer, announcementArray);
-    }
-
-    // If player and dealer push
-    else if (player.handValue === dealer.handValue && roundData.isDealerFacedownCardShowing) { // isDealerFacedownCardShowing == True (facedown rule)
-
-        // Check if player status has been announced before
-        if (!player.statusAnnounced) {
-
-            // Update player statuses, update endGameReason text
-            player.status = 'push';
-            announcementArray.push(`${player.name} has Pushed`);
-            player.statusAnnounced = true;
-        };
-
-        // Append player status to player name
-        player = appendPlayerStatus(player);
-
-        // If there is only one player then push dealer also
-        if (players.length === 1) {
-            dealer.status = 'push'
-            appendPlayerStatus(dealer); // Append player status to player name
-        };
-    }
-
-    // If player wins
-    else if (player.handValue === 21) {
-
-        // Check if player status has been announced before
-        if (!player.statusAnnounced) {
-
-            // Update player statuses, update endGameReason text
-            player.status = 'won';
-            announcementArray.push(`${player.name} has a Blackjack!`);
-            player.statusAnnounced = true;
-        };
-
-        // Append player status to player name
-        player = appendPlayerStatus(player);
-    }
-
-    // If dealer wins
-    else if (dealer.handValue === 21 && roundData.isDealerFacedownCardShowing) { // isDealerFacedownCardShowing == True (facedown rule)
-
-        // Update dealer status
-        dealer.status = 'won';
-        announcementArray.push('Dealer has won their hand');
-
-        // Append player status to player name
-        dealer = appendPlayerStatus(dealer);
-
-        // Update other player statuses
-        player.status = 'lost';
-
-        // Ask user to restart game
-        await askToRestartGame(players, dealer, announcementArray);
     };
 
-    // Append newlines and symbol to end and start of each announcementArray entry, type cast to String
-    announcementArray = announcementArray.map(item => `> ${item}`);
-    announcementArray = announcementArray.join('\n');
-    
-    return announcementArray;
-};
 
-// Check the hands of all players and the dealer, returns Array (REDUNDANT ??)
-// export async function checkAllHands(players, dealer) {};
+    // Conditions for possible outcomes
+    if (player.handValue > 21) {
+
+        // If player goes bust
+        updateStatus(player, 'bust', `${player.name} has gone bust!`);
+    }
+    else if (dealer.handValue > 21 && facedownCardShowing) {
+
+        // If dealer goes bust
+        updateStatus(dealer, 'bust', 'The Dealer has gone bust!');
+        updateStatus(player, 'won', `${player.name} has won their hand!`);
+        await askToRestartGame(players, dealer, announcements);
+    }
+    else if (player.handValue === dealer.handValue && facedownCardShowing) {
+
+        // If player pushes
+        updateStatus(player, 'push', `${player.name} has pushed!`);
+        let hasEveryPlayerPushed = players.every(plyr => plyr.handValue === dealer.handValue);
+
+        // If the game is being played by one player (dealer also pushes)
+        if (players.length === 1 || hasEveryPlayerPushed) {
+            updateStatus(dealer, 'push', `The Dealer has pushed!`);
+        };
+    }
+    else if (player.handValue === 21 && !facedownCardShowing) {
+
+        // Check dealer facedown card for Blackjack in the case of a push
+        if (player.handValue === 21) {
+            updateStatus(player, 'won', `${player.name} has a Blackjack`);
+        };
+    }
+    else if (player.handValue === 21 && facedownCardShowing) {
+
+        // Check dealer facedown card for Blackjack in the case of a push
+        if (player.handValue === 21) {
+            updateStatus(player, 'won', `${player.name} has a Blackjack`);
+        };
+
+        if (dealer.handValue === 21 && player.every(plyr => plyr.handValue === 21)) {
+            player.statusChanged = false;
+            updateStatus(player, 'push', `${player.name} has pushed with a Blackjack`);
+            // updateStatus(dealer, 'push', 'The Dealer has pushed with a Blackjack');
+        };
+    };
+    // else if (dealer.handValue === 21 && facedownCardShowing) {
+
+    //     // If dealer has a blackjack
+    //     updateStatus(dealer, 'won', 'The Dealer has a Blackjack!');
+    // };
+
+    // Return the announcements to be rendered in the table
+    return announcements.map(message => `> ${message}`).join('\n');
+};

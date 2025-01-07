@@ -24,7 +24,7 @@ function stylePlayerData(name, hand, handValue, status, isDealer) {
                 return [chalk.bgRed(name), chalk.bgRed(hand), chalk.bgRed(handValue)];
             };
 
-            return [chalk.gray(name), chalk.gray(hand), chalk.gray(handValue)];
+            return [chalk.strikethrough.gray(name), chalk.strikethrough.gray(hand), chalk.strikethrough.gray(handValue)];
 
         default:
             return [name, hand, handValue];

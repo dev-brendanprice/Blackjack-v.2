@@ -53,7 +53,7 @@ export async function configureGame() {
     // Print players' cards *before* validating scores/statuses
     clearConsole();
     console.log(chalk.italic.gray('🛈 Note: These are the initial cards dealt to everyone before the first round\n'));
-    renderTable(players, dealer, ['> Players have been set\n> Initial cards have been dealt']); // Last parameter has to be Array
+    await renderTable(players, dealer, ['> Players have been set\n> Initial cards have been dealt']); // Last parameter has to be Array
 
     // Finally, wait for user input to start game
     await promptUser(chalk.gray('\nPress ENTER to start the game..'))

@@ -6,7 +6,7 @@ export default class Player {
         this.handValue = handValue;
         this.status = status;
         this.isDealer = false; // Safe(er) way to check if player in iterative loop is dealer
-        this.statusVisible = false; // Used to check if player status has been appended to player name
+        this.statusChanged = false; // Used to check if player status has been appended to player name
         this.statusAnnounced = false; // Used to check if player status has been announced in dialogue box
         this.hand = [];
     }

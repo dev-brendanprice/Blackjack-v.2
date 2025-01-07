@@ -6,9 +6,8 @@ export default class Dealer {
         this.handValue = handValue;
         this.status = status;
         this.isDealer = true;
-        this.statusVisible = false;
+        this.statusChanged = false;
         this.hand = [];
-        this.handWithFacedownRule = [];
     }
 
     // Exclusively return the second cards' handValue

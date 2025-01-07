@@ -16,15 +16,14 @@ export function dealCardsToAllPlayers(players, dealer, deck) {
         players[index].handValue += card.cardValue;
     };
 
-    // [DEV] Force specific player(s) to get cards
-    // players[0].hand = [{cardValue: 11, cardName: '8♦'}, {cardValue: 10, cardName: '4♠ (fake)'}];
-    // players[0].handValue = 21;
-    // players[1].hand = [{cardValue: 11, cardName: '8♦'}, {cardValue: 10, cardName: '4♠ (fake)'}];
-    // players[1].handValue = 22;
-    // players[2].hand = [{cardValue: 11, cardName: '8♦'}, {cardValue: 10, cardName: '4♠ (fake)'}];
-    // players[2].handValue = 18;
-    // players[3].hand = [{cardValue: 11, cardName: '8♦'}, {cardValue: 10, cardName: '4♠ (fake)'}];
-    // players[3].handValue = 15;
-
     players.pop(); // Remove dealer from players arr
+
+    // [DEV] Force player(s) and dealer to get specific cards/handValue
+    // players[0].hand = [{cardValue: 11, cardName: 'A♦'}, {cardValue: 10, cardName: 'J♠ [dev]'}];
+    // players[0].handValue = 18;
+    // players[1].hand = [{cardValue: 11, cardName: 'A♦'}, {cardValue: 10, cardName: 'J♠ [dev]'}];
+    // players[1].handValue = 22;
+
+    // dealer.hand = [{cardValue: 11, cardName: 'A♦'}, {cardValue: 10, cardName: 'J♠ [dev]'}];
+    // dealer.handValue = 21;
 };

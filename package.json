@@ -9,7 +9,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "ascii-text-generator": "^1.0.5",
     "center-align": "^1.0.1",

@@ -1,6 +1,6 @@
 import { configureGame, roundData } from '../main.js';
-import { promptUser } from './userInput.js';
-import { checkHand } from './checkHands.js';
+import { promptUser, askToRestartGame } from './userInput.js';
+import { checkHand, compareHands } from './checkHands.js';
 import { clearConsole } from './clearConsole.js';
 import { checkForActive } from './checkForActive.js';
 import { renderTable } from './renderTable.js';
@@ -15,62 +15,73 @@ export async function playRound(players, dealer, houseDeck) {
     // Increment round counter
     roundData.set({ newRoundNumber: roundData.roundNumber + 1 });
 
+    // Check for players that have a natural Blackjack
+    let announcement = '';
+    for (let plyr of players) {
+        await checkHand(plyr, dealer, players);
+    };
+
+    // Check for active players
+    let areActivePlayers = players.some(plyr => plyr.status === 'active');
+
     // Iterate over players and ask them to HIT or STAND
-    let announcement;
-    for (let i=0; i < players.length; i++) {
+    for (let i=0; i < players.length && areActivePlayers; i++) {
 
         // Clear console and log round
         clearConsole();
-        console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+        console.log(chalk.bold.underline.gray('Player Table'))
 
         // Render table and get player from index
         let player = players[i];
         await renderTable(players, dealer, announcement);
 
         // Ask player to hit until they stand
-        let isPlaying = true;
-        while (isPlaying && player.status === 'active') {
+        let hasChosenHit = true;
+        while (hasChosenHit && player.status === 'active') {
 
-            // Returns true when player stands
-            isPlaying = await playHand(player, houseDeck);
+            // Returns false when player stands
+            hasChosenHit = await playHand(player, houseDeck);
 
             // Clear console and log round
             clearConsole();
-            console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+            console.log(chalk.bold.underline.gray('Player Table'))
 
             // Check player hand, re-render table
-            announcement = await checkHand(player, dealer, players);
-            await renderTable(players, dealer, announcement);
+            await checkHand(player, dealer, players);
+            await renderTable(players, dealer);
         };
     };
+
     
-    // Check for no active players
-    let activePlayersExist = await checkForActive(players); // Default return from this function is False
-    if (!activePlayersExist) {
+    // ..
+    if (!areActivePlayers) {
 
-        // Ask user to start a new game
-        return await promptUser(chalk.yellow(`\nAll players have finished their hands. Press ENTER to start a new game..`))
-        .then(() => configureGame());
+        // Clear console, re-render table
+        clearConsole();
+        console.log(chalk.bold.underline.gray('Player Table'))
+        await renderTable(players, dealer, announcement);
+        console.log(chalk.yellow('There are no active players, Skipping player turns..'));
+        console.log('-> Revealing dealer facedown card\n-> Playing dealer hand');
+    }
+    else {
+        console.log(chalk.bgGreen('-> Dealer revealing facedown card and playing hand'));
     };
+    
+    // Wait for 3 seconds to reveal facedown card and play dealer's hand
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-
-    // Dealer mechanics past this point
     // Toggle boolean to show dealer facedown card past this point
     roundData.set({ isDealerFacedownCardShowing: true });
-    console.log(roundData.isDealerFacedownCardShowing);
 
     // Clear console, re-render table
     clearConsole();
-    console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
-    await renderTable(players, dealer, announcement);
-
-    console.log(chalk.bgGreen('-> Dealer is playing their hand..'));
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before playing dealer hand
+    console.log(chalk.bold.underline.gray('Player Table'))
+    await renderTable(players, dealer);
 
     // Delay each iteration by 1 second, Play dealers hand until it's worth 17 or more (16 or less)
     while (dealer.handValue <= 16) {
 
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Delay by 1 second
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
 
         // Pull new card for Dealer
         let newCard = houseDeck.deal();
@@ -79,17 +90,24 @@ export async function playRound(players, dealer, houseDeck) {
 
         // Clear console, Re-render table
         clearConsole();
-        console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
+        console.log(chalk.bold.underline.gray('Player Table'))
         await renderTable(players, dealer);
     };
 
-    // Check dealers' hand
-    let dealerAnnouncement = await checkHand(dealer, dealer, players);
-    console.log(dealer.getHand());
-    console.log(dealerAnnouncement);
+    // Compare players' hands against dealers' hand
+    let announcements = await compareHands(dealer, players);
 
     // Clear console, Re-render table
     clearConsole();
-    console.log(chalk.bold.underline.gray(`\nRound ${roundData.roundNumber}\n`));
-    await renderTable(players, dealer, dealerAnnouncement);
+    console.log(chalk.bold.underline.gray('Player Table'))
+    await renderTable(players, dealer, announcements);
+
+    // If there are no active players
+    let activePlayersExist = players.some(plyr => plyr.status === 'active');
+    if (!activePlayersExist) {
+
+        // Ask user to start a new game
+        return await promptUser(chalk.yellow(`\nAll players have finished playing. Press ENTER to start a new game..`))
+        .then(() => configureGame());
+    };
 };
