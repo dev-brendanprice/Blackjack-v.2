@@ -1,11 +1,19 @@
 import { clearConsole } from "./clearConsole.js";
 import { promptUser } from "./userInput.js";
+import { configureGame } from "../main.js";
 
 import fs from "fs";
+import path from 'path';
 import chalk from "chalk";
+import center_align from "center-align"; // Used to center-align text in console
 import terminalImage from "terminal-image";
-import center_align from "center-align";
-import { configureGame } from "../main.js";
+
+// Get __dirname to use with path.join to retain relative file paths
+import { fileURLToPath } from "url";
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 // Print the image to the console whilst also creating a code-blocking function
@@ -31,11 +39,11 @@ export async function introduce() {
     clearConsole(); // Clear the console
 
     // Print/Render headmast stuff
-    console.log(await printImage('./assets/headmast.png'));
+    console.log(await printImage(path.join(__dirname, '../assets/headmast.png')));
     console.log(chalk.gray('Welcome to Blackjack! v1.0                                       Made by Brendan Price 02/01/2025'));
 
     // Print intro text from .txt file to console
-    let introText = fs.readFileSync('./assets/introduction.txt', {encoding: 'utf-8'});
+    let introText = fs.readFileSync(path.join(__dirname, '../assets/introduction.txt'), {encoding: 'utf-8'});
     console.log(chalk.blue(center_align(`\n${introText}`)));
 
     // Ask user to press enter to start the game

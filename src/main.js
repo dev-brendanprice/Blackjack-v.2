@@ -4,8 +4,8 @@ import { dealCardsToAllPlayers } from './modules/dealCards.js';
 import { clearConsole } from './modules/clearConsole.js';
 import { renderTable } from './modules/renderTable.js';
 import { playRound } from './modules/playRound.js';
-import Dealer from './classes/dealer.js';
 import { introduce } from './modules/intro.js';
+import Dealer from './classes/dealer.js';
 
 import chalk from 'chalk';
 

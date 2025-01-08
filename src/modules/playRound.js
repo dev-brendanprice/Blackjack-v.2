@@ -1,8 +1,7 @@
 import { configureGame, roundData } from '../main.js';
-import { promptUser, askToRestartGame } from './userInput.js';
+import { promptUser } from './userInput.js';
 import { checkHand, compareHands } from './checkHands.js';
 import { clearConsole } from './clearConsole.js';
-import { checkForActive } from './checkForActive.js';
 import { renderTable } from './renderTable.js';
 import { playHand } from './playHand.js';
 

@@ -1,6 +1,5 @@
 
 // Check for active players, toggle boolean if there are active players
-// This check can easily be accomplished with .some(), but I will use a different method here for showcase reasons
 export async function checkForActive(players) {
 
     let activePlayerExists = false; // Default
@@ -10,5 +9,3 @@ export async function checkForActive(players) {
 
     return activePlayerExists;
 };
-
-    // let activePlayerExists = players.some(player => player.status === 'active');

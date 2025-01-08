@@ -66,7 +66,7 @@ function mapPlayerData(players) {
 export async function renderTable(players, dealer, dialogue = '') {
 
     // Wrap in a Promise to ensure the table is always rendered when called
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
         players.push(dealer); // Push dealer to players (removed at the end of this function)
 

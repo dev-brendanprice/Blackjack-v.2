@@ -33,7 +33,6 @@ export async function askToPlayHand(question) {
     };
 };
 
-
 // Ask user a question and always receive valid response
 export async function askQuestion(question) {
 
