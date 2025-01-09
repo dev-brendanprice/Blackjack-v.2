@@ -1,3 +1,5 @@
+import { gameData } from './globalData.js';
+
 
 // Compare the hand of each player against the dealer and update statuses accordingly
 export async function compareHands(dealer, players = []) {
@@ -16,6 +18,9 @@ export async function compareHands(dealer, players = []) {
         const playerNaturalBlackjack = ply.hand.length === 2 && ply.handValue === 21;
         const dealerNaturalBlackjack = dealer.hand.length === 2 && dealer.handValue === 21;
 
+        const potentialDealerBlackjack = dealer.getFacedownValue() === 10 || dealer.getFacedownValue() === 11;
+
+
         // if player is bust
         if (ply.handValue > 21) {
             updateStatus(ply, 'bust', `${ply.name} bust`);
@@ -24,6 +29,15 @@ export async function compareHands(dealer, players = []) {
         // if player has natural blackjack but dealer does not
         else if (playerNaturalBlackjack && !dealerNaturalBlackjack) {
             updateStatus(ply, 'won', `${ply.name} won, Blackjack!`);
+        }
+
+        // if player has natural Blackjack and Dealer face-up card is an Ace or 10-value
+        else if (playerNaturalBlackjack && potentialDealerBlackjack) {
+            gameData.set({ isDealerFacedownCardShowing: true }); // reveal facedown card, check for a push
+            if (ply.handValue === dealer.handValue) {
+                updateStatus(ply, 'push', `${ply.name} push`);
+            }
+            else updateStatus(ply, 'won', `${ply.name} won, Blackjack!`);
         }
         
         // if player has pushed with dealer

@@ -13,11 +13,7 @@ import chalk from 'chalk';
 // Play a round of blackjack (recursively calls it self again based on user input)
 export async function playRound(players, dealer, houseDeck) {
 
-    // Check for players that have a natural Blackjack
     let announcement = '';
-    for (let plyr of players) {
-        await checkHand(plyr, dealer, players);
-    };
 
     // Check for active players
     let areActivePlayers = players.some(plyr => plyr.status === 'active');
@@ -51,7 +47,7 @@ export async function playRound(players, dealer, houseDeck) {
     };
 
     
-    // ..
+    // Check for no active players, play Dealer hand if True
     if (!areActivePlayers) {
 
         // Clear console, re-render table

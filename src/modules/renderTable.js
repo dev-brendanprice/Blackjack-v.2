@@ -4,99 +4,70 @@ import Table from 'cli-table3';
 import chalk from 'chalk';
 
 
-// Style the player data according to the players/dealers' status
-function stylePlayerData(name, hand, handValue, status, isDealer) {
+// Style String properties based on entity status
+function stylePlayerData(status, name, hand, handValue) {
 
-    // Check each scenario
-    switch (status) {
-
-        case 'won':
-            return [chalk.bgYellow(name), chalk.bgYellow(hand), chalk.bgYellow(handValue)];
-
-        case 'bust':
-        case 'push':
-            return [chalk.strikethrough.gray(name), chalk.strikethrough.gray(hand), chalk.strikethrough.gray(handValue)];
-
-        case 'lost':
-            
-            // Dealer has different text style if they lose
-            if (isDealer) {
-                return [chalk.bgRed(name), chalk.bgRed(hand), chalk.bgRed(handValue)];
-            };
-
-            return [chalk.strikethrough.gray(name), chalk.strikethrough.gray(hand), chalk.strikethrough.gray(handValue)];
-
-        default:
-            return [name, hand, handValue];
+    let row = [status, name, hand, handValue];
+    if (status === 'won') {
+        return row.map(v => `${chalk.bgYellow(v)}`);
+    }
+    else if (status === 'lost') {
+        return row.map(v => `${chalk.gray(v)}`);
+    }
+    else if (status === 'bust') {
+        return row.map(v => `${chalk.strikethrough.gray(v)}`);
     };
+
+    return row;
 };
 
 
 // Mutate and return players to only contain what is required in the table
-function mapPlayerData(players) {
-    
-    let playerRows = [];
-    for (let player of players) {
+function mapPlayerData(entities) {
 
-        // Check if player is dealer and only show facedown after first round
-        let handValue = player.handValue.toString();
+    return entities.map(entity => {
 
-        // Determine if player is dealer and apply text styling based on status & if isDealerFacedownCardShowing is set to True
-        if (player.isDealer && !gameData.isDealerFacedownCardShowing) {
-            handValue = player.getFacedownValue().toString();
+        // Don't reveal total handValue if entity is Dealer (facedown rule)
+        let handValue = entity.handValue.toString();
+        if (entity.isDealer && !gameData.isDealerFacedownCardShowing) {
+            handValue = entity.getFacedownValue().toString();
         };
 
-        // Declare new Array to return
-        let rowData = stylePlayerData(
-            player.name,
-            player.getHand(gameData.isDealerFacedownCardShowing),
-            handValue,
-            player.status,
-            player.isDealer
+        // Format rows and push to return Array
+        return stylePlayerData(
+            entity.status,
+            entity.name,
+            entity.getHand(gameData.isDealerFacedownCardShowing),
+            handValue
         );
-
-        playerRows.push(rowData);
-    };
-
-    return playerRows;
+    });
 };
 
 
-// Render and configure the table for a [more] readable console output
+// Configure and Render a CLI table that contains player data
 export async function renderTable(players, dealer, dialogue = '') {
 
     // Wrap in a Promise to ensure the table is always rendered when called
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
 
-        players.push(dealer); // Push dealer to players (removed at the end of this function)
+        let entities = [...players, dealer];
+        let lengthOfLongestPlayerName = entities.sort((a,b) => { return b.length - a.length })[0]; // Make name column length responsive to player names
 
-        // Configure new table class
+        // Configure table and row data
+        let rowData = mapPlayerData(entities);
         let table = new Table({
-            head: ['Name', 'Hand', 'Hand Value'],
-            colWidths: [20, 20, 12]
+            head: ['Status', 'Name', 'Hand', 'Hand Value'],
+            colWidths: [12, lengthOfLongestPlayerName.length, 20, 12]
         });
 
-        // Get rows for player data
-        let playerDataRows = mapPlayerData(players);
-
-        // Check for parameter options
+        // Push and configure table rows, (All properties are String)
         if (dialogue) {
-
-            // Push and configure table rows
-            table.push(
-                ...playerDataRows,
-                [{colSpan: 3, content: chalk.cyan(dialogue)}] // dialogue is always type-casted to String
-            );
-        }
-        else {
-
-            // Push and configure table rows without dialogue row
-            table.push(...playerDataRows);
+            table.push(...rowData, [{colSpan: 4, content: chalk.cyan(dialogue)}])
+        } else {
+            table.push(...rowData);
         };
 
-        console.log(table.toString()); // Printing table only works in string format
-        players.pop(); // Remove dealer from players array
-
-        resolve() // Fulfill Promise
+        console.log(table.toString()); // Wildcard type-cast to String
+        resolve();
     });
 };
