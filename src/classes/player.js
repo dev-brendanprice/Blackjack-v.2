@@ -14,9 +14,8 @@ export default class Player {
     // Returns the players' current hand + handValue
     getHand() {
 
-        let handMap = this.hand.flatMap((item) => {
-            return item.cardName;
-        });
+        // Flatten hand which contains array of Card classes
+        let handMap = this.hand.flatMap(item => { return item.cardName });
 
         handMap = handMap.join(', '); // Put spaces between items to prettify
         return handMap;

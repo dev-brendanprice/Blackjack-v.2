@@ -18,7 +18,7 @@ export default class Dealer {
     // Returns the players' current hand + handValue
     getHand(isFacedownCardShowing) {
 
-        // Convert player hand into a flat array of strings
+        // Flatten hand which contains array of Card classes
         let handMap = this.hand.flatMap(item => { return item.cardName });
 
         // Check if we are returning hand with facedown rule

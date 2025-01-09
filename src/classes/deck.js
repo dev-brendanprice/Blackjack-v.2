@@ -14,14 +14,14 @@ class Card {
 export default class Deck {
     constructor() {
         this.suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
-        this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'Jack', 'Queen', 'King', 'Ace'];
+        this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
         this.suitAscii = ['♥', '♦', '♣', '♠'];
         this.cards = [];
     }
 
     // Creates 52 cards for a Deck, each have an assigned cardValue
     create() {
-        const newCardsArray = [];
+        let newCardsArray = [];
 
         // Loop over suits and ranks to get every card permutation
         for (const suit of this.suits) {
@@ -30,7 +30,7 @@ export default class Deck {
                 let cardValue = 10; // Default is 10 so King, Queen, and Jack automatically are assigned 10
 
                 // Find corresponding card values
-                let rankTypeCast = parseInt(rank); // (int) type cast, Rank is NOT King, Queen, Jack, or Ace, cardValue equal to rank
+                const rankTypeCast = parseInt(rank); // (int) type cast, Rank is NOT King, Queen, Jack, or Ace, cardValue equal to rank
                 if (!isNaN(rankTypeCast)) {
                     cardValue = rankTypeCast; // (int)
                 }
@@ -39,8 +39,8 @@ export default class Deck {
                 };
 
                 // Format card name to use ASCII glyphs and shortened suit (King = K etc)
-                let firstCharOfRank = Array.from(rank)[0];
-                let suitGlyph = this.suitAscii[this.suits.indexOf(suit)];
+                const firstCharOfRank = Array.from(rank)[0];
+                const suitGlyph = this.suitAscii[this.suits.indexOf(suit)];
                 let cardName;
 
                 // Check for specific suit text color

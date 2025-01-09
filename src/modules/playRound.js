@@ -1,6 +1,7 @@
 import { configureGame, roundData } from '../main.js';
 import { promptUser } from './userInput.js';
-import { checkHand, compareHands } from './checkHands.js';
+import { checkHand } from './checkHands.js';
+import { compareHands } from './compareHands.js';
 import { clearConsole } from './clearConsole.js';
 import { renderTable } from './renderTable.js';
 import { playHand } from './playHand.js';
