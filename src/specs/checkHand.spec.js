@@ -35,9 +35,8 @@ test('compareHands: Edge case scenarios', async () => {
     .catch(err => { functionResponse = err });
 
     // console.log(typeof functionResponse);
-    console.log(functionResponse, 'FUBAR');
-    // expect(functionResponse).toBeTypeOf('string');
-    // expect(functionResponse instanceof Error).toBe(false);
+    expect(functionResponse).toBeTypeOf('string');
+    expect(functionResponse instanceof Error).toBe(false);
 
     // Edge Case: statusChanged is set to True for each updated Player
     await compareHands(dealer, players);

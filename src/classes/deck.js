@@ -39,16 +39,20 @@ export default class Deck {
                 };
 
                 // Format card name to use ASCII glyphs and shortened suit (King = K etc)
-                const firstCharOfRank = Array.from(rank)[0];
+                let charOfRank = Array.from(rank)[0];
                 const suitGlyph = this.suitAscii[this.suits.indexOf(suit)];
                 let cardName;
 
+                if (rank === '10') { // Avoid showing 1<suit>
+                    charOfRank = '10';
+                };
+
                 // Check for specific suit text color
                 if (suit === 'Hearts' || suit === 'Diamonds') { // Make text red
-                    cardName = `${chalk.red(firstCharOfRank)}${chalk.red(suitGlyph)}`;
+                    cardName = `${chalk.red(charOfRank)}${chalk.red(suitGlyph)}`;
                 }
                 else if (suit === 'Spades' || suit === 'Clubs') {  // Make text gray
-                    cardName = `${chalk.gray(firstCharOfRank)}${chalk.gray(suitGlyph)}`;
+                    cardName = `${chalk.gray(charOfRank)}${chalk.gray(suitGlyph)}`;
                 };
 
                 newCardsArray.push(new Card(suit, rank, cardValue, cardName)); // Push this *new* card to the array

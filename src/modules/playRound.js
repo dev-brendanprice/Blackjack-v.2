@@ -1,19 +1,17 @@
-import { configureGame, roundData } from '../main.js';
+import { configureGame } from '../main.js';
 import { promptUser } from './userInput.js';
 import { checkHand } from './checkHands.js';
 import { compareHands } from './compareHands.js';
 import { clearConsole } from './clearConsole.js';
 import { renderTable } from './renderTable.js';
 import { playHand } from './playHand.js';
+import { gameData } from './globalData.js';
 
 import chalk from 'chalk';
 
 
 // Play a round of blackjack (recursively calls it self again based on user input)
 export async function playRound(players, dealer, houseDeck) {
-
-    // Increment round counter
-    roundData.set({ newRoundNumber: roundData.roundNumber + 1 });
 
     // Check for players that have a natural Blackjack
     let announcement = '';
@@ -71,11 +69,11 @@ export async function playRound(players, dealer, houseDeck) {
     await new Promise(resolve => setTimeout(resolve, 3000));
 
     // Toggle boolean to show dealer facedown card past this point
-    roundData.set({ isDealerFacedownCardShowing: true });
+    gameData.set({ isDealerFacedownCardShowing: true });
 
     // Clear console, re-render table
     clearConsole();
-    console.log(chalk.bold.underline.gray('Player Table'))
+    console.log(chalk.bold.underline.gray('Player Table'));
     await renderTable(players, dealer);
 
     // Delay each iteration by 1 second, Play dealers hand until it's worth 17 or more (16 or less)

@@ -1,4 +1,4 @@
-import { roundData } from '../main.js';
+import { gameData } from './globalData.js';
 
 import Table from 'cli-table3';
 import chalk from 'chalk';
@@ -42,14 +42,14 @@ function mapPlayerData(players) {
         let handValue = player.handValue.toString();
 
         // Determine if player is dealer and apply text styling based on status & if isDealerFacedownCardShowing is set to True
-        if (player.isDealer && roundData.isDealerFacedownCardShowing === false) {
+        if (player.isDealer && !gameData.isDealerFacedownCardShowing) {
             handValue = player.getFacedownValue().toString();
         };
 
         // Declare new Array to return
         let rowData = stylePlayerData(
             player.name,
-            player.getHand(roundData.isDealerFacedownCardShowing),
+            player.getHand(gameData.isDealerFacedownCardShowing),
             handValue,
             player.status,
             player.isDealer

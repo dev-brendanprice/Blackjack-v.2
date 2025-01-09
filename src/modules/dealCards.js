@@ -20,9 +20,9 @@ export function dealCardsToAllPlayers(players, dealer, deck) {
 
     // [DEV] Force player(s) and dealer to get specific cards/handValue
     // players[0].hand = [{cardValue: 11, cardName: 'A♦'}, {cardValue: 10, cardName: 'J♠ [dev]'}];
-    // players[0].handValue = 18;
+    // players[0].handValue = 21;
     // players[1].hand = [{cardValue: 11, cardName: 'A♦'}, {cardValue: 10, cardName: 'J♠ [dev]'}];
-    // players[1].handValue = 22;
+    // players[1].handValue = 21;
 
     // dealer.hand = [{cardValue: 11, cardName: 'A♦'}, {cardValue: 10, cardName: 'J♠ [dev]'}];
     // dealer.handValue = 21;

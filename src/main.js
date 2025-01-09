@@ -5,31 +5,21 @@ import { clearConsole } from './modules/clearConsole.js';
 import { renderTable } from './modules/renderTable.js';
 import { playRound } from './modules/playRound.js';
 import { introduce } from './modules/intro.js';
+import { gameData } from './modules/globalData.js';
+
 import Dealer from './classes/dealer.js';
 
 import chalk from 'chalk';
 
-
-// Globally mutable round data
-export let roundData = {
-
-    roundNumber: 0, // Zero-based, increments by 1 AFTER game setup
-    isDealerFacedownCardShowing: false, // Default
-
-    // Setter method to allow global changes (can set both above variables)
-    set({ newRoundNumber, isDealerFacedownCardShowing }) {
-
-        // Check for either or variable being passed in parameter and set
-        if (newRoundNumber !== undefined) this.roundNumber = newRoundNumber;
-        if (isDealerFacedownCardShowing !== undefined) this.isDealerFacedownCardShowing = isDealerFacedownCardShowing;
-    }
-};
 
 introduce(); // (Main entry point) Calls configureGame() when finished
 
 
 // Run the configuration for the game
 export async function configureGame() {
+
+    // Reset gameData
+    gameData.isDealerFacedownCardShowing = false;
 
     clearConsole(); // Remove all console content before starting game
     console.log(chalk.bold.underline.gray('Game Setup\n'));

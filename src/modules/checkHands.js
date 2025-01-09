@@ -1,12 +1,12 @@
 import { askToRestartGame } from "./userInput.js";
-import { roundData } from "../main.js";
+import { gameData } from './globalData.js';
 
 
 // Check the hand of a single player
 export async function checkHand(player, dealer, players) {
 
     let announcements = []; // Announces changes for player/dealer.status
-    let facedownCardShowing = roundData.isDealerFacedownCardShowing;
+    let facedownCardShowing = gameData.isDealerFacedownCardShowing;
 
     // Helper method to update status of a passed entity
     const updateStatus = (entity, status, message) => {
@@ -14,7 +14,6 @@ export async function checkHand(player, dealer, players) {
         // Only update status once
         if (!entity.statusChanged) {
             entity.status = status;
-            // entity.name = `${entity.name} (${entity.status})`;
             entity.statusChanged = true;
             entity.statusAnnounced = true;
             announcements.push(message);
