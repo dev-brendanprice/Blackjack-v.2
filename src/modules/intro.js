@@ -28,10 +28,10 @@ export async function introduce() {
     const headerText = fs.readFileSync(path.join(__dirname, '../assets/headerText.txt'), {encoding: 'utf-8'});
     const introText = fs.readFileSync(path.join(__dirname, '../assets/introduction.txt'), {encoding: 'utf-8'});
     console.log(chalk.gray(headerText));
-    console.log(chalk.blue(center_align(`\n${introText}`)));
+    console.log(chalk.black(center_align(`\n${introText}`)));
 
     // Ask user to press enter to start the game
-    await promptUser(chalk.red('\n\n\nPress ENTER to start the game..'))
+    await promptUser(chalk.yellow('\n\n\nPress ENTER to start the game..'))
     .then(() => configureGame());
 };
 

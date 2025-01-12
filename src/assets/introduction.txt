@@ -4,4 +4,4 @@ where your goal is to beat the dealer by getting as close to 21 as possible with
 In this game, you’ll make strategic decisions by answering on-screen prompts
 like "Hit" to draw another card or "Stand" to keep your current total.
 
-Simply type your choices, or press the ENTER key, when prompted and watch the action unfold. 🃏
+Simply type your choices, or press the ENTER key, when prompted and watch the action unfold.

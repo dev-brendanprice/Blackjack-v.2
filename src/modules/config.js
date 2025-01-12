@@ -13,7 +13,7 @@ export async function createPlayer(playerReference) {
         return new Player(playerReference, 0, 'active');
     };
 
-    let playerName = await askQuestion(chalk.blue(`Player ${playerReference}, Please enter your player name: \n`));
+    let playerName = await askQuestion(chalk.black(`Player ${playerReference}, Please enter your player name: \n`));
     return new Player(playerName, 0, 'active');
 };
 

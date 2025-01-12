@@ -13,7 +13,7 @@ export function dealPairToAllPlayers(dealer, deck, players) {
         entities[entityIndex].handValue += newCard.cardValue;
     };
 
-    insertHands(entities, false); // true means this function will insert hands
+    insertHands(entities, false); // [dev] true means this function will insert hands
     assumeAceValues(entities); // Assume best Ace values
     return entities;
 };

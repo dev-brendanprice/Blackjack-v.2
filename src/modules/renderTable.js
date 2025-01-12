@@ -62,7 +62,7 @@ export async function renderTable(players, dealer, dialogue = '') {
 
         // Push and configure table rows, (All properties are String)
         if (dialogue) {
-            table.push(...rowData, [{colSpan: 4, content: chalk.cyan(dialogue)}])
+            table.push(...rowData, [{colSpan: 4, content: chalk.green(dialogue)}])
         } else {
             table.push(...rowData);
         };

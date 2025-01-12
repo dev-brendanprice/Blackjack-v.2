@@ -24,7 +24,7 @@ async function initGameComponents() {
 
     const dealer = new Dealer('Dealer', 0, 'active');
     const deck = createDeck();
-    const playerCount = await askQuestionNumberInput(chalk.blue('How many people are playing the game?:\n'));
+    const playerCount = await askQuestionNumberInput(chalk.black('How many people are playing the game?:\n'));
     const players = [];
 
     for (let i=0; i<playerCount; i++) { // Create n players, n is player input - playerCount
