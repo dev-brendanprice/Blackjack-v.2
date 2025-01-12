@@ -2,6 +2,7 @@
 
 This project is a Node.js-based implementation of the classic card game Blackjack.  This project provides a way to play Blackjack at CLI which offers an interactive yet simple experience.
 
+![Showcase of Gameplay](/src/assets/github_showcase.png)
 
 ## Installation
 Ensure you have the latest version of [git](https://git-scm.com/downloads) and [Node.js](https://nodejs.org/en/download) installed.
