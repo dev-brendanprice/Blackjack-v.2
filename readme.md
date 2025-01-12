@@ -48,7 +48,7 @@ Blackjack-v.2/
 ├── package.json          # Project metadata and dependencies
 └── .gitignore            # Used to ignore files and directories
 
-+   node_modules/         # Contains dependencies, will configure on `npm install`
++   node_modules/         # Contains dependencies, will appear via `npm install`
 ```
 
 
