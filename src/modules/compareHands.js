@@ -18,8 +18,11 @@ export async function compareHands(dealer, players = []) {
         const playerNaturalBlackjack = ply.hand.length === 2 && ply.handValue === 21;
         const dealerNaturalBlackjack = dealer.hand.length === 2 && dealer.handValue === 21;
 
-        const potentialDealerBlackjack = dealer.getFacedownValue() === 10 || dealer.getFacedownValue() === 11;
-
+        // Just return false if dealer hand is empty
+        let potentialDealerBlackjack = false;
+        if (dealer.hand.length !== 0) {
+            potentialDealerBlackjack = dealer.hand[1].rank === 'Ace' || dealer.getFacedownValue() === 10;
+        };
 
         // if player is bust
         if (ply.handValue > 21) {

@@ -1,16 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { expect, test } from 'vitest';
 
+import { compareHands } from '../modules/compareHands.js';
 import Player from '../classes/player.js';
 import Dealer from '../classes/dealer.js';
-
-import { compareHands } from '../modules/compareHands.js';
 
 
 test('compareHands: Edge case scenarios', async () => {
 
     const dealer = new Dealer('Dealer', 0, 'active');
-    let players = [];
+    const players = [];
 
     // Create 2 players
     for (let i=0; i<2; i++) {
@@ -19,10 +18,10 @@ test('compareHands: Edge case scenarios', async () => {
     };
 
     // Edge Case: Empty players array
-    let emptyPlayersArray = [];
+    const emptyArray = [];
     let functionResponse;
 
-    await compareHands(dealer, emptyPlayersArray)
+    await compareHands(dealer, emptyArray)
     .then(res => { functionResponse = res })
     .catch(err => { functionResponse = err });
 
@@ -40,7 +39,6 @@ test('compareHands: Edge case scenarios', async () => {
 
     // Edge Case: statusChanged is set to True for each updated Player
     await compareHands(dealer, players);
-    
     for (const plyr of players) {
 
         // All players should push because; handValue == 0 for all Players and Dealer here

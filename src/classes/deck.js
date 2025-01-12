@@ -35,7 +35,7 @@ export default class Deck {
                     cardValue = rankTypeCast; // (int)
                 }
                 else if (rank === 'Ace') {
-                    cardValue = 11; // Can be 1 or 11
+                    cardValue = 11; // Is later automatically changed to 1 based on handValue
                 };
 
                 // Format card name to use ASCII glyphs and shortened suit (King = K etc)
