@@ -52,11 +52,11 @@ Blackjack-v.2/
 ```
 
 
-## License
-Published under MIT license.
-
-
 ## Known Issues (That won't be fixed)
 These are issues that are known but wont be fixed as the time it would take to fix the issue will vastly outweigh the advantages of fixing them.  These issues also do not affect the gameplay in any capacity and are mostly just visual errors that can easily be ignored.
 
 1. Upon initially starting the game, when the blackjack image headmast is visible, resizing the CLI window will cause the CLI-image dependancy to create massive visual artifacting. This only happens with the headmast image and is just a visual error which poses no impairment to the functionality or performance of the game.  It is advised that you stick to one CLI window size after you start the game.
+
+
+## License
+Published under MIT license.
