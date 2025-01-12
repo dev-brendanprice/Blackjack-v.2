@@ -4,7 +4,8 @@
   "description": "A CLI-based Blackjack game.",
   "main": "src/main.js",
   "scripts": {
-    "main": "node src/main.js --trace-warnings",
+    "main": "node src/main.js",
+    "start": "node src/main.js",
     "test": "vitest"
   },
   "keywords": [],
