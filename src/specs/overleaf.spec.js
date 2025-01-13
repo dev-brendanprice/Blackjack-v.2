@@ -162,3 +162,20 @@ test('Winning hand: Nine, Ace and Ace', () => {
     // Check if players' status is 'won'
     expect(player.status).toBe('won');
 });
+
+// Player *somehow* has more than two aces
+test('Player has two or more Aces; Player is still active', () => {
+
+    const player = new Player('Player', 0, 'active');
+    const dealer = new Dealer('Dealer', 0, 'active');
+
+    // Manually insert four Aces into players *empty* hand
+    player.hand = [{cardValue: 11, cardName: 'A♥', rank: 'Ace'}, {cardValue: 11, cardName: 'A♦', rank: 'Ace'}, {cardValue: 11, cardName: 'A♣', rank: 'Ace'}, {cardValue: 11, cardName: 'A♠', rank: 'Ace'}];
+    player.handValue = 44;
+
+    // Check the players' hand
+    compareHands(dealer, [player]);
+
+    // Check if players' status is 'won' since the dealer's handValue is 0
+    expect(player.status).toBe('won');
+});

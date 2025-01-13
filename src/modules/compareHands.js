@@ -1,3 +1,4 @@
+import { assumeAceValues } from './assumeAceValues.js';
 import { gameData } from './globalData.js';
 
 
@@ -11,6 +12,9 @@ export async function compareHands(dealer, players = []) {
         entity.statusChanged = true;
         anc.push(message);
     };
+
+    // Assume optimal value for Ace cards
+    assumeAceValues([...players, dealer]);
 
     for (let ply of players) {
 
