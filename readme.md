@@ -1,6 +1,6 @@
 ![Readme.md Blackjack Header Image](/src/assets/github_headmast.png)
 
-This project is a Node.js-based implementation of the classic card game Blackjack.  This project provides a way to play Blackjack at CLI which offers an interactive yet simple experience.
+This project is a Node.js-based implementation of the classic card game Blackjack.  This project provides a way to play Blackjack at CLI which offers a simple yet interactive experience.
 
 ![Showcase of Gameplay](/src/assets/github_showcase.png)
 
