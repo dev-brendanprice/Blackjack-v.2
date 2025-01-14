@@ -24,16 +24,16 @@ Ensure you have the latest version of [git](https://git-scm.com/downloads) and [
 
 
 ## Usage
-Because this is a CLI based game, it is recommended that you use a specific CLI client; in this case windows powershell works the best. Other CLI clients may cause incorrect coloring, lack of text formatting, and could even make it confusing for the player(s) to comprehend information.
-
-> **Note:** It is also strongly recommended that you play on the largest possible CLI window size for best clarity
+Because this is a CLI based game, it is recommended that you use specific CLI clients. Other CLI clients, like Git Bash, may cause incorrect coloring, and lack of text formatting.
+- Windows: CMD (best) or Powershell
+- MacOS: zsh
 
 Finally, you can start the game using this command:
 
 ```shell
 npm run start
 ```
-
+> **Note:** It is also strongly recommended that you play on the largest possible CLI window size for best clarity
 
 ## Project Structure
 ```
