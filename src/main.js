@@ -1,5 +1,5 @@
 import { askQuestionNumberInput, promptUser } from './modules/userInput.js';
-import { createPlayer, createDeck } from './modules/config.js';
+import { createPlayer, createDeck } from './modules/setup.js';
 import { dealPairToAllPlayers } from './modules/dealCards.js';
 import { clearConsole } from './modules/clearConsole.js';
 import { renderTable } from './modules/renderTable.js';

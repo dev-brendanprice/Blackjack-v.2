@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+const faceCards = ['Jack', 'Queen', 'King', 'Ace'];
+
 // Card class, contains card suit, rank, card value, and card name
 class Card {
     constructor(suit, rank, cardValue, cardName) {
@@ -19,51 +21,48 @@ export default class Deck {
         this.cards = [];
     }
 
-    // Creates 52 cards for a Deck, each have an assigned cardValue
+    // Create a deck of 52 cards
     create() {
-        let newCardsArray = [];
 
-        // Loop over suits and ranks to get every card permutation
+        // Create all 52 cards
         for (const suit of this.suits) {
             for (const rank of this.ranks) {
 
-                let cardValue = 10; // Default is 10 so King, Queen, and Jack automatically are assigned 10
+                let cardName;
+                let cardValue = 10; // default, unless card is not face-card
 
-                // Find corresponding card values
-                const rankTypeCast = parseInt(rank); // (int) type cast, Rank is NOT King, Queen, Jack, or Ace, cardValue equal to rank
-                if (!isNaN(rankTypeCast)) {
-                    cardValue = rankTypeCast; // (int)
+                // If card is not face-card
+                if (!faceCards.includes(rank)) {
+                    cardValue = parseInt(rank);
                 }
                 else if (rank === 'Ace') {
-                    cardValue = 11; // Is later automatically changed to 1 based on handValue
+                    cardValue = 11;
                 };
 
-                // Format card name to use ASCII glyphs and shortened suit (King = K etc)
-                let charOfRank = Array.from(rank)[0];
+                // Get suit glyph and first character from card rank
                 const suitGlyph = this.suitAscii[this.suits.indexOf(suit)];
-                let cardName;
+                let firstCharacterFromCardRank = Array.from(rank)[0];
 
-                if (rank === '10') { // Avoid showing 1<suit>
-                    charOfRank = '10';
-                };
+                // avoid a 10-value card from showing as '1'
+                if (rank === '10') firstCharacterFromCardRank = '10';
 
-                // Check for specific suit text color
-                if (suit === 'Hearts' || suit === 'Diamonds') { // Make text red
-                    cardName = `${chalk.red(charOfRank)}${chalk.red(suitGlyph)}`;
+                // Get card name and apply text coloring
+                if (suit === 'Hearts' || suit === 'Diamonds') {
+                    cardName = chalk.red(`${firstCharacterFromCardRank}${suitGlyph}`);
                 }
-                else if (suit === 'Spades' || suit === 'Clubs') {  // Make text gray
-                    cardName = `${chalk.gray(charOfRank)}${chalk.gray(suitGlyph)}`;
+                else { // suit is not hearts or diamonds
+                    cardName = chalk.gray(`${firstCharacterFromCardRank}${suitGlyph}`);
                 };
 
-                newCardsArray.push(new Card(suit, rank, cardValue, cardName)); // Push this *new* card to the array
+                // Push card to Deck
+                this.cards.push(new Card(suit, rank, cardValue, cardName));
             };
         };
-
-        this.cards = newCardsArray;
     };
 
     // Shuffle the deck of cards using Fisher-Yates Shuffle (unbiased)
     shuffle() {
+        
         let currentIndex = this.cards.length;
         while (currentIndex != 0) {
 
@@ -78,10 +77,11 @@ export default class Deck {
         };
     };
 
-    // Deal a single Card, then remove it from Deck
+    // Deal the top card, then remove it
     deal() {
-        let topCard = this.cards.length - 1;
-        let card = this.cards[topCard];
+
+        const topCard = this.cards.length - 1;
+        const card = this.cards[topCard];
         this.cards.splice(topCard, 1); // Use splice to remove chosen card, and index, from Deck
         return card;
     };

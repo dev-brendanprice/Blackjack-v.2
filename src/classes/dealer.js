@@ -18,14 +18,12 @@ export default class Dealer {
     // Returns the players' current hand + handValue
     getHand(isFacedownCardShowing) {
 
-        // Flatten hand which contains array of Card classes
-        let handMap = this.hand.flatMap(item => { return item.cardName });
-
-        // Check if we are returning hand with facedown rule
-        if (isFacedownCardShowing === false) {
+        // Flatten hand, check for active facedown rule
+        const handMap = this.hand.flatMap(item => { return item.cardName });
+        if (!isFacedownCardShowing) {
             handMap[0] = '**';
         };
 
-        return handMap.join(', '); // Put spaces between items to prettify
+        return handMap.join(', '); // Prettify with commas
     };
 };
