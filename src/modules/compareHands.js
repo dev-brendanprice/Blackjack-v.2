@@ -26,6 +26,7 @@ export async function compareHands(dealer, players = [], isEvaluate = false) {
         if (isEvaluate) {
             if (ply.handValue === 21) ply.status = 'won';
             else if (ply.handValue >= 22) ply.status = 'bust';
+            return;
         };
 
         // Just return false if dealer hand is empty

@@ -58,6 +58,7 @@ export async function playRound(dealer, deck, players) {
         dealer.hand.push(card);
         dealer.handValue += card.cardValue;
 
+        await compareHands(dealer, [dealer], true); // Evaluate dealer hand, exclusively for text coloring
         refreshConsole(players, dealer, 'Player Table');
         console.log(eventText('-> Dealer revealing facedown card and playing hand'));
     };
