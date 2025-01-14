@@ -3,7 +3,7 @@ import { gameData } from './globalData.js';
 
 
 // Compare the hand of each player against the dealer and update statuses accordingly
-export async function compareHands(dealer, players = []) {
+export async function compareHands(dealer, players = [], isEvaluate = false) {
 
     // Helper method to update status of a passed entity
     let anc = [];
@@ -21,6 +21,12 @@ export async function compareHands(dealer, players = []) {
         // check if Player (ply) has a natural blackjack
         const playerNaturalBlackjack = ply.hand.length === 2 && ply.handValue === 21;
         const dealerNaturalBlackjack = dealer.hand.length === 2 && dealer.handValue === 21;
+
+        // Will only run when evaluating hands during a player turn, exclusively for text coloring
+        if (isEvaluate) {
+            if (ply.handValue === 21) ply.status = 'won';
+            else if (ply.handValue >= 22) ply.status = 'bust';
+        };
 
         // Just return false if dealer hand is empty
         let potentialDealerBlackjack = false;

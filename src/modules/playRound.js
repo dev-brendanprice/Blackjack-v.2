@@ -1,6 +1,5 @@
 import { configureGame, eventText, headerText, promptText } from '../main.js';
 import { promptUser } from './userInput.js';
-import { checkHand } from './checkHands.js';
 import { compareHands } from './compareHands.js';
 import { clearConsole } from './clearConsole.js';
 import { renderTable } from './renderTable.js';
@@ -35,7 +34,7 @@ export async function playRound(dealer, deck, players) {
         while (hasChosenHit && player.status === 'active') {
 
             hasChosenHit = await playHand(player, deck); // playHand() returns false if stand is chosen
-            await checkHand(player, dealer, players); // Refactor this function
+            await compareHands(dealer, [player], true); // Evaluate hand to apply text coloring
             refreshConsole(players, dealer, 'Player Table');
         };
     };
