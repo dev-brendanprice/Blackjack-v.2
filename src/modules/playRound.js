@@ -1,4 +1,4 @@
-import { configureGame } from '../main.js';
+import { configureGame, eventText, headerText, promptText } from '../main.js';
 import { promptUser } from './userInput.js';
 import { checkHand } from './checkHands.js';
 import { compareHands } from './compareHands.js';
@@ -23,7 +23,7 @@ export async function playRound(players, dealer, houseDeck) {
 
         // Clear console and log round
         clearConsole();
-        console.log(chalk.bold.underline.gray('Player Table'))
+        console.log(headerText('Player Table'));
 
         // Render table and get player from index
         let player = players[i];
@@ -38,7 +38,7 @@ export async function playRound(players, dealer, houseDeck) {
 
             // Clear console and log round
             clearConsole();
-            console.log(chalk.bold.underline.gray('Player Table'))
+            console.log(headerText('Player Table'));
 
             // Check player hand, re-render table
             await checkHand(player, dealer, players);
@@ -52,11 +52,11 @@ export async function playRound(players, dealer, houseDeck) {
 
         // Clear console, re-render table
         clearConsole();
-        console.log(chalk.bold.underline.gray('Player Table'))
+        console.log(headerText('Player Table'));
         await renderTable(players, dealer, announcement);
-        console.log(chalk.yellow('There are no active players, Skipping player turns..'));
+        console.log(promptText('There are no active players, Skipping player turns..'));
     };
-    console.log(chalk.bgGreen('-> Dealer revealing facedown card and playing hand'));
+    console.log(eventText('-> Dealer revealing facedown card and playing hand'));
     
     // Wait for 3 seconds to reveal facedown card and play dealer's hand
     await new Promise(resolve => setTimeout(resolve, 3000));
@@ -66,9 +66,9 @@ export async function playRound(players, dealer, houseDeck) {
 
     // Clear console, re-render table
     clearConsole();
-    console.log(chalk.bold.underline.gray('Player Table'));
+    console.log(headerText('Player Table'));
     await renderTable(players, dealer);
-    console.log(chalk.bgGreen('-> Dealer revealing facedown card and playing hand'));
+    console.log(eventText('-> Dealer revealing facedown card and playing hand'));
 
     // Delay each iteration by 1 second, Play dealers hand until it's worth 17 or more (16 or less)
     while (dealer.handValue <= 16) {
@@ -82,9 +82,9 @@ export async function playRound(players, dealer, houseDeck) {
 
         // Clear console, Re-render table
         clearConsole();
-        console.log(chalk.bold.underline.gray('Player Table'))
+        console.log(headerText('Player Table'))
         await renderTable(players, dealer);
-        console.log(chalk.bgGreen('-> Dealer revealing facedown card and playing hand'));
+        console.log(eventText('-> Dealer revealing facedown card and playing hand'));
     };
 
     // Compare players' hands against dealers' hand
@@ -92,7 +92,7 @@ export async function playRound(players, dealer, houseDeck) {
 
     // Clear console, Re-render table
     clearConsole();
-    console.log(chalk.bold.underline.gray('Player Table'))
+    console.log(headerText('Player Table'))
     await renderTable(players, dealer, announcements);
 
     // If there are no active players

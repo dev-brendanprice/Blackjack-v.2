@@ -1,4 +1,5 @@
-import { configureGame } from '../main.js';
+/* eslint-disable no-undef */
+import { configureGame, warnText } from '../main.js';
 import { renderTable } from './renderTable.js';
 import { clearConsole } from './clearConsole.js';
 
@@ -29,7 +30,7 @@ export async function askToPlayHand(question) {
         if ((answer === 'HIT' || answer === 'STAND') && answer) {
             return answer;
         };
-        console.log(chalk.red('Please enter either "HIT" or "STAND", with no spaces: '));
+        console.log(warnText('Please enter either "HIT" or "STAND", with no spaces: '));
     };
 };
 
@@ -49,7 +50,7 @@ export async function askQuestion(question) {
         if (answer) {
             return answer;
         };
-        console.log(chalk.red('Please enter something valid (no whitespace): '));
+        console.log(warnText('Please enter something valid (no whitespace): '));
     };
 };
 
@@ -69,7 +70,7 @@ export async function askQuestionNumberInput(question) {
         if (!isNaN(answer) && answer >= 1) {
             return answer;
         };
-        console.log(chalk.red('Please enter a number that is 1 or more, in its numerical form ("1" not "one", etc.): \n'));
+        console.log(warnText('Please enter a number that is 1 or more, in its numerical form ("1" not "one", etc.): \n'));
     };
 };
 
@@ -81,7 +82,7 @@ export async function askToRestartGame(players, dealer, announcementString) {
     await renderTable(players, dealer, announcementString);
 
     // Ask user to start a new game
-    return await promptUser(chalk.yellow(`Press ENTER to start a new game..`))
+    return await promptUser(warnText(`Press ENTER to start a new game..`))
     .then(async () => configureGame());
 };
 
