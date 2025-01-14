@@ -10,21 +10,31 @@ import Dealer from './classes/dealer.js';
 
 import chalk from 'chalk';
 
-introduce(); // (Main entry point) Calls configureGame() when finished
+// Declare default and fallback CLI chalk colors for compatibility
+export const primaryText = chalk.supportsColor ? chalk.gray : chalk.white;
+export const headerText = chalk.supportsColor ? chalk.bold.underline.gray : chalk.white;
+export const noticeText = chalk.supportsColor ? chalk.italic.gray : chalk.white;
+export const eventText = chalk.supportsColor ? chalk.green : chalk.white;
+export const eventBgText = chalk.suportsColor ? chalk.bgGreen : chalk.white;
+export const promptText = chalk.supportsColor ? chalk.yellow : chalk.white;
+export const warnText = chalk.supportsColor ? chalk.red : chalk.white;
+
+// Main entry point function
+introduce();
 
 
-// Initialize all game components ( dealer, n players, deck of cards )
+// Initialize all game components (dealer, n players, deck of cards)
 async function initGameComponents() {
 
     // Setup CLI console
     clearConsole();
-    console.log(chalk.bold.underline.gray('Game Setup\n'));
+    console.log(headerText('Game Setup\n'));
 
     gameData.isDealerFacedownCardShowing = false; // Initialize (reset) game data also
 
     const dealer = new Dealer('Dealer', 0, 'active');
     const deck = createDeck();
-    const playerCount = await askQuestionNumberInput(chalk.black('How many people are playing the game?:\n'));
+    const playerCount = await askQuestionNumberInput(promptText('How many people are playing the game?:\n'));
     const players = [];
 
     for (let i=0; i<playerCount; i++) { // Create n players, n is player input - playerCount
@@ -40,11 +50,11 @@ async function startGame(dealer, deck, players) {
 
     // Print players' cards *before* validating scores/statuses
     clearConsole();
-    console.log(chalk.italic.gray('🛈 Note: These are the initial cards dealt to everyone before the first round\n'));
+    console.log(noticeText('🛈 Note: These are the initial cards dealt to everyone before the first round\n'));
     await renderTable(players, dealer, ['> Players have been set\n> Initial cards have been dealt']); // Last parameter has to be Array
 
     // Finally, wait for user input to start game
-    await promptUser(chalk.gray('\nPress ENTER to start the game..'))
+    await promptUser(promptText('\nPress ENTER to start the game..'))
     .then(() => playRound(players, dealer, deck));
 };
 

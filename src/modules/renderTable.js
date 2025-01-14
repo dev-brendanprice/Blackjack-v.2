@@ -9,7 +9,7 @@ function stylePlayerData(status, name, hand, handValue) {
 
     let row = [status, name, hand, handValue];
     if (status === 'won') {
-        return row.map(v => `${chalk.bgYellow(v)}`);
+        return row.map(v => `${chalk.bgGreen(v)}`);
     }
     else if (status === 'lost') {
         return row.map(v => `${chalk.gray(v)}`);
