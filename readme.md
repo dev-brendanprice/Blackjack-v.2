@@ -27,6 +27,7 @@ Ensure you have the latest version of [git](https://git-scm.com/downloads) and [
 Because this is a CLI based game, it is recommended that you use specific CLI clients. Other CLI clients, like Git Bash, may cause incorrect coloring, and lack of text formatting.
 - Windows: CMD (best) or Powershell
 - MacOS: zsh
+- Linux: Default terminal app *should* be fine, but hasn't been tested
 
 Finally, you can start the game using this command:
 
