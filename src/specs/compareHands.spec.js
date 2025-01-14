@@ -33,7 +33,7 @@ test('compareHands: Edge case scenarios', async () => {
     .then(res => { functionResponse = res })
     .catch(err => { functionResponse = err });
 
-    // console.log(typeof functionResponse);
+    // Check if compareHands function response is not an Error object
     expect(functionResponse).toBeTypeOf('string');
     expect(functionResponse instanceof Error).toBe(false);
 
