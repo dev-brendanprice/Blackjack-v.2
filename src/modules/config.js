@@ -1,8 +1,7 @@
 import { askQuestion } from './userInput.js';
+import { promptText } from '../main.js';
 import Player from '../classes/player.js';
 import Deck from '../classes/deck.js';
-
-import chalk from 'chalk';
 
 
 // Create new player via user input
@@ -13,7 +12,7 @@ export async function createPlayer(playerReference) {
         return new Player(playerReference, 0, 'active');
     };
 
-    let playerName = await askQuestion(chalk.black(`Player ${playerReference}, Please enter your player name: \n`));
+    let playerName = await askQuestion(promptText(`Player ${playerReference}, Please enter your player name: \n`));
     return new Player(playerName, 0, 'active');
 };
 

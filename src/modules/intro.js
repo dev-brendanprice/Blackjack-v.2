@@ -1,10 +1,9 @@
 import { clearConsole } from "./clearConsole.js";
 import { promptUser } from "./userInput.js";
-import { configureGame } from "../main.js";
+import { configureGame, primaryText, promptText } from "../main.js";
 
 import fs from "fs";
 import path from "path";
-import chalk from "chalk";
 import center_align from "center-align"; // Used to center-align text in console
 import terminalImage from "terminal-image";
 
@@ -20,6 +19,7 @@ const __dirname = dirname(__filename);
 export async function introduce() {
 
     clearConsole();
+    console.info()
 
     // Render headmast PNG to console
     console.log(await printImage(path.join(__dirname, '../assets/headmast.png')));
@@ -27,11 +27,11 @@ export async function introduce() {
     // Print intro text from .txt file to console
     const headerText = fs.readFileSync(path.join(__dirname, '../assets/headerText.txt'), {encoding: 'utf-8'});
     const introText = fs.readFileSync(path.join(__dirname, '../assets/introduction.txt'), {encoding: 'utf-8'});
-    console.log(chalk.gray(headerText));
-    console.log(chalk.black(center_align(`\n${introText}`)));
+    console.log(primaryText(headerText));
+    console.log(primaryText(center_align(`\n${introText}`)));
 
     // Ask user to press enter to start the game
-    await promptUser(chalk.yellow('\n\n\nPress ENTER to start the game..'))
+    await promptUser(promptText('\n\n\nPress ENTER to start the game..'))
     .then(() => configureGame());
 };
 
