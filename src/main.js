@@ -55,7 +55,7 @@ async function startGame(dealer, deck, players) {
 
     // Finally, wait for user input to start game
     await promptUser(promptText('\nPress ENTER to start the game..'))
-    .then(() => playRound(players, dealer, deck));
+    .then(() => playRound(dealer, deck, players));
 };
 
 // Configures the main and global data

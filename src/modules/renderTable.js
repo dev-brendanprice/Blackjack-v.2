@@ -45,7 +45,7 @@ function mapPlayerData(entities) {
 
 
 // Configure and Render a CLI table that contains player data
-export async function renderTable(players, dealer, dialogue = '') {
+export async function renderTable(players, dealer, roundSummary = '') {
 
     // Wrap in a Promise to ensure the table is always rendered when called
     return new Promise(resolve => {
@@ -61,8 +61,8 @@ export async function renderTable(players, dealer, dialogue = '') {
         });
 
         // Push and configure table rows, (All properties are String)
-        if (dialogue) {
-            table.push(...rowData, [{colSpan: 4, content: chalk.green(dialogue)}])
+        if (roundSummary) {
+            table.push(...rowData, [{colSpan: 4, content: chalk.green(roundSummary)}])
         } else {
             table.push(...rowData);
         };

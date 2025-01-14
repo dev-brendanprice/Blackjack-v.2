@@ -7,100 +7,70 @@ import { renderTable } from './renderTable.js';
 import { playHand } from './playHand.js';
 import { gameData } from './globalData.js';
 
-import chalk from 'chalk';
+
+// Clear the console, re-render table
+async function refreshConsole(players, dealer, header, roundSummary) {
+
+    clearConsole();
+    console.log(headerText(`${header}`));
+    await renderTable(players, dealer, roundSummary);
+};
 
 
-// Play a round of blackjack (recursively calls it self again based on user input)
-export async function playRound(players, dealer, houseDeck) {
-
-    let announcement = '';
+// Play each player hand, play dealer hand, end round
+export async function playRound(dealer, deck, players) {
 
     // Check for active players
-    let areActivePlayers = players.some(plyr => plyr.status === 'active');
+    let areActivePlayers = players.some(player => player.status === 'active');
+    let roundSummary = '';
 
-    // Iterate over players and ask them to HIT or STAND
-    for (let i=0; i < players.length && areActivePlayers; i++) {
+    // Iterate over each player, ask to hit or stand
+    for (const player of players) {
 
-        // Clear console and log round
-        clearConsole();
-        console.log(headerText('Player Table'));
-
-        // Render table and get player from index
-        let player = players[i];
-        await renderTable(players, dealer, announcement);
-
-        // Ask player to hit until they stand
+        // Prepare console for current hand
         let hasChosenHit = true;
+        refreshConsole(players, dealer, 'Player Table', roundSummary);
+
+        // Deal card to play until they stand
         while (hasChosenHit && player.status === 'active') {
 
-            // Returns false when player stands
-            hasChosenHit = await playHand(player, houseDeck);
-
-            // Clear console and log round
-            clearConsole();
-            console.log(headerText('Player Table'));
-
-            // Check player hand, re-render table
-            await checkHand(player, dealer, players);
-            await renderTable(players, dealer);
+            hasChosenHit = await playHand(player, deck); // playHand() returns false if stand is chosen
+            await checkHand(player, dealer, players); // Refactor this function
+            refreshConsole(players, dealer, 'Player Table');
         };
     };
 
-    
-    // Check for no active players, play Dealer hand if True
-    if (!areActivePlayers) {
-
-        // Clear console, re-render table
-        clearConsole();
-        console.log(headerText('Player Table'));
-        await renderTable(players, dealer, announcement);
-        console.log(promptText('There are no active players, Skipping player turns..'));
-    };
+    // 3 second pause, play dealer hand
     console.log(eventText('-> Dealer revealing facedown card and playing hand'));
-    
-    // Wait for 3 seconds to reveal facedown card and play dealer's hand
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Toggle boolean to show dealer facedown card past this point
+    await new Promise((resolve) => {setTimeout(resolve, 3000)});
     gameData.set({ isDealerFacedownCardShowing: true });
 
-    // Clear console, re-render table
-    clearConsole();
-    console.log(headerText('Player Table'));
-    await renderTable(players, dealer);
+    // Prepare console for dealer hand
+    refreshConsole(players, dealer, 'Player Table');
     console.log(eventText('-> Dealer revealing facedown card and playing hand'));
 
-    // Delay each iteration by 1 second, Play dealers hand until it's worth 17 or more (16 or less)
+    // Play dealers' hand
     while (dealer.handValue <= 16) {
 
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
+        await new Promise((resolve) => {setTimeout(resolve, 1000)});
 
-        // Pull new card for Dealer
-        let newCard = houseDeck.deal();
-        dealer.hand.push(newCard);
-        dealer.handValue += newCard.cardValue;
+        // Deal card and update handValue
+        let card = deck.deal();
+        dealer.hand.push(card);
+        dealer.handValue += card.cardValue;
 
-        // Clear console, Re-render table
-        clearConsole();
-        console.log(headerText('Player Table'))
-        await renderTable(players, dealer);
+        refreshConsole(players, dealer, 'Player Table');
         console.log(eventText('-> Dealer revealing facedown card and playing hand'));
     };
 
-    // Compare players' hands against dealers' hand
-    let announcements = await compareHands(dealer, players);
+    // Compare player hands with the dealer
+    roundSummary = await compareHands(dealer, players);
+    areActivePlayers = players.some(player => player.status === 'active');
+    refreshConsole(players, dealer, 'Player Table', roundSummary); // Prepare console for end of round
 
-    // Clear console, Re-render table
-    clearConsole();
-    console.log(headerText('Player Table'))
-    await renderTable(players, dealer, announcements);
-
-    // If there are no active players
-    let activePlayersExist = players.some(plyr => plyr.status === 'active');
-    if (!activePlayersExist) {
-
-        // Ask user to start a new game
-        return await promptUser(chalk.yellow(`\nAll players have finished playing. Press ENTER to start a new game..`))
+    // No active players, ask to start new game
+    if (!areActivePlayers) {
+        await promptUser(promptText(`\nAll players have finished playing. Press ENTER to start a new game..`))
         .then(() => configureGame());
     };
 };

@@ -62,14 +62,8 @@ export async function checkHand(player, dealer, players) {
         if (dealer.handValue === 21 && player.every(plyr => plyr.handValue === 21)) {
             player.statusChanged = false;
             updateStatus(player, 'push', `${player.name} has pushed with a Blackjack`);
-            // updateStatus(dealer, 'push', 'The Dealer has pushed with a Blackjack');
         };
     };
-    // else if (dealer.handValue === 21 && facedownCardShowing) {
-
-    //     // If dealer has a blackjack
-    //     updateStatus(dealer, 'won', 'The Dealer has a Blackjack!');
-    // };
 
     // Return the announcements to be rendered in the table
     return announcements.map(message => `> ${message}`).join('\n');

@@ -19,7 +19,6 @@ const __dirname = dirname(__filename);
 export async function introduce() {
 
     clearConsole();
-    console.info()
 
     // Render headmast PNG to console
     console.log(await printImage(path.join(__dirname, '../assets/headmast.png')));
