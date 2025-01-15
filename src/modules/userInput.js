@@ -54,6 +54,26 @@ export async function askQuestion(question) {
     };
 };
 
+// Band-aid solution to allow user to choose their Ace value
+export async function askForAceValue(question) { // Un-used function
+
+    // Again, avoid incursion inside while loop, wrap all logic in while
+    while (true) {
+
+        // Use promise to await for response before executing next instruction
+        let answer = await new Promise((resolve) => {
+            readlineInterface.question(question, (response) => resolve(response));
+        });
+
+        // Type cast input to integer in base 10, trim whitepsace from answer input
+        answer = parseInt(answer.trim(), 10);
+        if (!isNaN(answer) && (answer === 1 || answer === 11)) { // Is integer and is 1 or 11
+            return answer;
+        };
+        console.log(warnText('Please enter 1 or 11, in its numerical form ("1" not "one", etc.): \n'));
+    };
+};
+
 // Ask user a question and always receive a valid number response
 export async function askQuestionNumberInput(question) {
 
@@ -67,7 +87,7 @@ export async function askQuestionNumberInput(question) {
 
         // Type cast input to integer in base 10, trim whitepsace from answer input
         answer = parseInt(answer.trim(), 10);
-        if (!isNaN(answer) && answer >= 1) {
+        if (!isNaN(answer) && answer >= 1) { // Is integer and greater than or equal to 1
             return answer;
         };
         console.log(warnText('Please enter a number that is 1 or more, in its numerical form ("1" not "one", etc.): \n'));

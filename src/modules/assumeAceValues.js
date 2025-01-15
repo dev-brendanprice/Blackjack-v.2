@@ -12,7 +12,7 @@ export function assumeAceValues(entities) {
             for (let card of entity.hand) {
 
                 // Change the Ace's value to 1
-                if (card.cardValue === 11) {
+                if (card.cardValue === 11) { // If card is ace and card hasnt been changed
                     card.cardValue = 1;
                     aceFound = true;
                     break;
